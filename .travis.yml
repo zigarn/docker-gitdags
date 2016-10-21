@@ -1,0 +1,24 @@
+language: shell
+
+sudo: required
+
+services:
+    - docker
+
+env:
+    global:
+        - REPO=zigarn/gitdags
+        - secure: "Y41H+PKN07lIguIFc3uhKmkJOhMDZtI1XJ09e0pM/H6YvXI/BLqzsznUJelRI4gTjA3SRzYAgjlkZmttc114BxdJhdF6x0kABO6w115GUf8ovOKt+D5SNCqC4zsKGcmZx8ffitkI22BUMdLlfD/cH0RynMWkMzYOLqQFs0Ogs21HyzbUaYhRN5sme1fAYk/p7rOnd5ApEMQ80l7JSSsyj+Sgivs/HKGcglXOYWdXElAGo84tBYkE/2wDMWgqDLHmIQObDyUzHjPEFiw2loN1h+daa0X4YEcWFaaAGrQXur2lof2aN5S7td94HQDBUoTi75xxjxBC7m+G3cj+H8R5HZyslmYBreskL9h+NHj79pNtfqNnBiJXznQ3cBnLikA0pFDr93JvTgs5xpidbvUYOZoJlyMg8elhkVkOwnd+FjasaJZxHNLkZcY4nSQPpDjNtTMlf97Gj+ILRi26CvJNFlQ6JN52rU2ZAroCAS3kO2tjiwWwNMUdSe4JwxqwpNf3xdy/EnAEpm/xRQMScOq9kL6a1mFGX/9f5FWtSLjbDkgxyzVxPwTUHfESQ0hdRqFeXELf0/2y0ZDvuQYAdXCRA5IxbJjRUZnU2gK+9ZSsSLouf1MvHYSgFFyN/pOOVWIM8lRRRs/I9fdv6Q7t47+R5esF0oYbtN5ape2uGe4ciu4=" # DOCKER_USER
+        - secure: "fT2a3xaBlkJlnUuOxQEoFhEIQXz8/9sqtNGmcjoyybilEbgcR/7p3NAqBUOXIl5RiHgk5xBYvd1fwVTZgMejPonK+susyn/eUTExYipwrj2H0cwbFLa66v1vllVDzEOMHO+MO5MKM5TnPOtD7nPLqgcBGqwNAXwjFORB/kQCwYBP2EgHj6CL5VfOBYKLkD7IwB2B8VKui9IJL2+a9v2mZ2x7xW5TTgIqJRAJFrbRT5JZN7v8nNlqCzqggBCmyUTwM0KPqleYCJBjmJ7B63++mc5sqqvOOVODkTQUoBtWCwbuKwK+fUrNwIAQ0w+SgMTQejap8PBRkVbtQu9yACBB1LOfcOdQTOPQtTbnxE+J0iRRdDpr2tgxXNvFxjSRQoRf1PwKNyhPSGYvHuVuBGgQ7Sbc1wDwN9bteTfRO0mSg5Bwmtw1LFVwms9L6wyKz9FPbzrSBqwcS/XGnW9mP9U3E33eajIYu9Qup4kUkdi+08dyvmDaF84+R0x2QsqNEpGoN86JNIvzLpo1XVStgi2et+YTABvS4mMUjE23P1X78k8QAVUyW9RQsIMw0CrMq6l36iNFuwiF2RF5ci/UbEhepi5CZq/8qEFwsNE2yRVW6yXXjI6IdYl3nml5jTQUPNs7mhepvLa1EEukKBOHLM6oTnBTYsS/11hUSCcSZK+YUyE=" # DOCKER_PASS
+
+script:
+    - export VCS_REF=`git rev-parse --short HEAD`
+    - export BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+    - export VERSION=`git describe --always HEAD`
+    - docker build --build-arg VCS_REF=$VCS_REF --build-arg BUILD_DATE=$BUILD_DATE --build-arg VERSION=$VERSION -t $REPO:$TRAVIS_COMMIT .
+
+after_success:
+    - docker login --username $DOCKER_USER --password $DOCKER_PASS
+    - export TAG=`if [ "$TRAVIS_TAG" != "" ]; then echo $TRAVIS_TAG; elif [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+    - docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG
+    - docker push $REPO:$TAG
