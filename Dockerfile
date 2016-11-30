@@ -18,14 +18,17 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 # Install necessary binaries and libraries
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		texlive \
-		xzdec \
-		pdf2svg \
-        wget \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN tlmgr init-usertree && tlmgr install pgf xcolor-solarized standalone
-RUN mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/ && wget -q --no-check-certificate -O $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/gitdags.sty https://github.com/Jubobs/gitdags/raw/master/gitdags.sty
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+         texlive \
+         xzdec \
+         pdf2svg \
+         wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN tlmgr init-usertree && tlmgr install pgf xcolor-solarized standalone lm
+RUN mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/ \
+    && wget -q --no-check-certificate -O $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/gitdags.sty https://github.com/Jubobs/gitdags/raw/master/gitdags.sty
 
 # Data volumes
 VOLUME /data
