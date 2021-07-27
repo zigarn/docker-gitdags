@@ -1,0 +1,43 @@
+name: Docker
+
+on: push
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get VCS data
+        id: vcs_data
+        run: |
+          echo "::set-output name=ref::$(git rev-parse --short HEAD)"
+          echo "::set-output name=version::$(git describe --always HEAD)"
+      - name: Compute image tag
+        id: tag
+        run: |
+          if ${{ startsWith(github.ref, 'refs/tags/') }}; then
+            echo "::set-output name=value::${GITHUB_REF#refs/tags/}"
+          elif ${{ github.ref == 'refs/heads/master' }}; then
+            echo "::set-output name=value::latest"
+          else
+            echo "::set-output name=value::${GITHUB_REF#refs/heads/}"
+          fi
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args: |
+            BUILD_DATE=${{ steps.date.outputs.date }}
+            VCS_REF=${{ steps.vcs_data.outputs.ref }}
+            VERSION=${{ steps.vcs_data.outputs.version }}
+          tags: zigarn/gitdags:${{ steps.tag.outputs.value }}
+          push: true
