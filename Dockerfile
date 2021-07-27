@@ -25,6 +25,7 @@ RUN apt-get update \
          pdf2svg \
          wget \
          xz-utils \
+         librsvg2-bin \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN tlmgr init-usertree \
@@ -38,6 +39,6 @@ RUN mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/ \
 VOLUME /data
 WORKDIR /data
 
-# SVG generation script
-ADD generateSVG.sh /generateSVG.sh
-ENTRYPOINT ["/generateSVG.sh"]
+# SVG and PNG generation script
+ADD generateIMG.sh /generateIMG.sh
+ENTRYPOINT ["/generateIMG.sh"]
