@@ -1,21 +1,20 @@
 FROM ubuntu:21.04
 
-MAINTAINER Alexandre Garnier <zigarn@gmail.com>
-
 ARG BUILD_DATE=none
 ARG VCS_REF=none
 ARG VERSION=none
 
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="docker-gitdags" \
-      org.label-schema.description="gitdags docker image to generate git commit graphs" \
-      org.label-schema.usage="https://github.com/zigarn/docker-gitdags/blob/$VCS_REF/README.md" \
-      org.label-schema.url="https://github.com/zigarn/docker-gitdags" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/zigarn/docker-gitdags.git" \
-      org.label-schema.vendor="Zigarn" \
-      org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
+LABEL org.opencontainers.image.created=$BUILD_DATE \
+      org.opencontainers.image.authors="Alexandre Garnier <zigarn@gmail.com>" \
+      org.opencontainers.image.url="https://github.com/zigarn/docker-gitdags" \
+      org.opencontainers.image.documentation="https://github.com/zigarn/docker-gitdags/blob/$VCS_REF/README.md" \
+      org.opencontainers.image.source="https://github.com/zigarn/docker-gitdags.git" \
+      org.opencontainers.image.version=$VERSION \
+      org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.vendor="Zigarn" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.title="docker-gitdags" \
+      org.opencontainers.image.description="gitdags docker image to generate git commit graphs"
 
 # Install necessary binaries and libraries
 RUN apt-get update \

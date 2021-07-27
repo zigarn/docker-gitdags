@@ -1,10 +1,10 @@
 # [gitdags](https://github.com/Jubobs/gitdags) docker image to generate git commit graphs
 
-[![Build Status](https://travis-ci.org/zigarn/docker-gitdags.svg?branch=master)](https://travis-ci.org/zigarn/docker-gitdags)
+[![Build Status](https://travis-ci.com/zigarn/docker-gitdags.svg?branch=master)](https://travis-ci.com/zigarn/docker-gitdags)
 
-[![Image Metadata](https://images.microbadger.com/badges/image/zigarn/gitdags.svg)](https://microbadger.com/images/zigarn/gitdags)
-[![version](https://images.microbadger.com/badges/version/zigarn/gitdags.svg)](https://microbadger.com/images/zigarn/gitdags)
-[![commit](https://images.microbadger.com/badges/commit/zigarn/gitdags.svg)](http://microbadger.com/images/zigarn/gitdags)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/zigarn/gitdags)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/zigarn/gitdags)
+![Docker Pulls](https://img.shields.io/docker/pulls/zigarn/gitdags)
 
 ## Use
 
