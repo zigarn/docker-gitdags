@@ -1,4 +1,4 @@
-FROM ubuntu:16.10
+FROM ubuntu:21.04
 
 MAINTAINER Alexandre Garnier <zigarn@gmail.com>
 
@@ -19,14 +19,18 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 # Install necessary binaries and libraries
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
          texlive \
          xzdec \
          pdf2svg \
          wget \
+         xz-utils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-RUN tlmgr init-usertree && tlmgr install pgf xcolor-solarized standalone lm
+RUN tlmgr init-usertree \
+    && tlmgr repository add ftp://tug.org/historic/systems/texlive/2020/tlnet-final \
+    && tlmgr repository remove http://mirror.ctan.org/systems/texlive/tlnet \
+    && tlmgr install pgf xcolor-solarized standalone lm
 RUN mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/ \
     && wget -q --no-check-certificate -O $(kpsewhich -var-value=TEXMFHOME)/tex/latex/gitdags/gitdags.sty https://github.com/Jubobs/gitdags/raw/master/gitdags.sty
 
